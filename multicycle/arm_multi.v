@@ -876,28 +876,85 @@ endmodule
 
 module alu(a,b,ALUControl,Result,ALUFlags);
   input [31:0] a,b;
-  input [1:0] ALUControl;
-  output reg [31:0] Result;
-  output wire [3:0] ALUFlags;
+  input [2:0] ALUControl; 
+  input reg [31:0] R1_mull; 
+  input reg [31:0] R2_mull; 
+  output reg [31:0] Result; 
+  output wire [3:0] ALUFlags; 
 
   wire [31:0] condinvb;
   wire [32:0] sum;
+  wire [63:0] R_mull; 
   
   assign condinvb = ALUControl[0] ? ~b : b;
   assign sum = a + condinvb + ALUControl[0];
+
+  /*
+  assign mull = a + condinvb + ALUControl[0];  //modificado
+        3'b011: Result = a | b
+	  endcase
+    end
+  */
+
+  always @(*)
+    begin 
+	  Result <= R_mull;
+	end 
+
+	  
+  always @(*)
+    begin
+	   
+	   R1_mull <= a;
+	   R2_mull <= b; 
+
+	   casex(ALUControl[2:0])
+	    3'b00?: Result = sum;
+	    3'b010: Result = a & b; 
+	    3'b011: Result = a | b; 
+	    3'b111: Result = R_mull[31:0];
+	   endcase
+    end
   
   always @(*)
-      begin
-        casex (ALUControl[1:0])
-        2'b0?: Result = sum;
-        2'b10: Result = a & b;
-        2'b11: Result = a | b;
-      endcase
-    end
-    
-    assign neg = Result[31];
-    assign zero = (Result == 32'b0);
-    assign carry = (ALUControl[1] == 1'b0) & sum[32];
-    assign overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
-    assign ALUFlags = {neg, zero, carry, overflow};
+    begin 
+	    case (ALUControl[2:0])
+	    3'b000: begin 
+		  R_mull = R1_mull * R2_mull; //modificado - MUL
+		  neg = R_mull[31];
+		  zero = (R_mull == 32'b0);
+		  carry = 1'b0;
+		  overflow = 1'b0;
+		  
+		end 	
+		3'b100: begin 
+		  R_mull = R1_mull * R2_mull; //modificado - MULL
+		  neg = R_mull[31];
+		  zero = (R_mull == 32'b0);
+		  carry = 1'b0;
+		  overflow = 1'b0;
+		end
+		3'b110: begin
+		  R_mull = $signed(R1_mull) * $signed(R2_mull); //SMULL 
+		  neg = R_mull[31];
+		  zero = (R_mull == 32'b0);
+		  carry = 1'b0;
+		  overflow = 1'b0;
+
+		default: begin 
+		  R_mull = 64'b0;
+		  neg = Result[31];
+          zero = (Result == 32'b0);
+          carry = (ALUControl[1] == 1'b0) & sum[32];
+          overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
+
+		end
+        endcase
+	end
+
+	assign neg = Result[31]; 
+	assign zero = (Result == 32'b0);
+	assign carry = (ALUControl[1] == 1'b0) & sum[32]; 
+	assign overflow = (ALUControl[1] == 1'b0) & ~()
+	assign ALUFlags = {neg, zero, carry, overflow};
 endmodule
