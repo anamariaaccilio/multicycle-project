@@ -753,6 +753,12 @@ module datapath (
 		.y(Result)
 	);
 
+	//modificado
+	mux2 #(32) r_mullmux(
+		.d0(R_mull),
+		.d1(ALUResult)
+	);
+
 	
 endmodule
 
@@ -841,6 +847,9 @@ module regfile (
 		if (we3) rf[wa3] <= wd3;
 	assign rd1 = (ra1 == 4'b1111) ? r15 : rf[ra1];
 	assign rd2 = (ra2 == 4'b1111) ? r15 : rf[ra2];
+
+	//Tenemos que añadir un puerto en el regfile
+	// Para que se escriba el "R_mull" (VER)
 endmodule
 
 module extend (
@@ -917,6 +926,13 @@ module alu(a,b,ALUControl,Result,ALUFlags);
 	    3'b111: Result = R_mull[31:0];
 	   endcase
 
+	   //mod
+	   neg = Result[31]; 
+	   zero = (Result == 32'b0);
+	   carry = (ALUControl[1] == 1'b0) & sum[32]; 
+	   overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
+
+	   
     end
   
   always @(posedge clk)
@@ -956,9 +972,13 @@ module alu(a,b,ALUControl,Result,ALUFlags);
 		endcase
 	end
 
+	/*
+
 	assign neg = Result[31]; 
 	assign zero = (Result == 32'b0);
 	assign carry = (ALUControl[1] == 1'b0) & sum[32]; 
-	assign overflow = (ALUControl[1] == 1'b0) & ~()
+	assign overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
 	assign ALUFlags = {neg, zero, carry, overflow};
+	*/
 endmodule
+
