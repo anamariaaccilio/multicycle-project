@@ -945,8 +945,8 @@ module alu(a,b,ALUControl,Result,ALUFlags);
 		  R_mull = 64'b0;
 		  neg = Result[31];
           zero = (Result == 32'b0);
-          carry = (ALUControl[1] == 1'b0) & sum[32];
-          overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
+		  carry = (ALUControl[1] == 1'b0) & sum[32];
+		  overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
 
 		end
         endcase
