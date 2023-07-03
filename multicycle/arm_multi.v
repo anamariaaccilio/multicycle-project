@@ -888,12 +888,14 @@ module alu(a,b,ALUControl,Result,ALUFlags);
   input [2:0] ALUControl; 
   input reg [31:0] R1_mull; 
   input reg [31:0] R2_mull; 
+  
   output reg [31:0] Result; 
   output wire [3:0] ALUFlags; 
 
   wire [31:0] condinvb;
   wire [32:0] sum;
   wire [63:0] R_mull; 
+
   
   assign condinvb = ALUControl[0] ? ~b : b;
   assign sum = a + condinvb + ALUControl[0];
@@ -927,10 +929,11 @@ module alu(a,b,ALUControl,Result,ALUFlags);
 	   endcase
 
 	   //mod
-	   neg = Result[31]; 
-	   zero = (Result == 32'b0);
-	   carry = (ALUControl[1] == 1'b0) & sum[32]; 
-	   overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
+	   //verificar el assign
+	   assign neg = Result[31]; 
+	   assign zero = (Result == 32'b0);
+	   assign carry = (ALUControl[1] == 1'b0) & sum[32]; 
+	   assign overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
 
 	   
     end
@@ -972,13 +975,14 @@ module alu(a,b,ALUControl,Result,ALUFlags);
 		endcase
 	end
 
-	/*
-
+	
+    /*
 	assign neg = Result[31]; 
 	assign zero = (Result == 32'b0);
 	assign carry = (ALUControl[1] == 1'b0) & sum[32]; 
 	assign overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
 	assign ALUFlags = {neg, zero, carry, overflow};
 	*/
+	
 endmodule
 
