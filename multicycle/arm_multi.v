@@ -896,13 +896,15 @@ module alu(a,b,ALUControl,Result,ALUFlags);
     end
   */
 
-  always @(*)
+  // Maneja lógica secuencial
+
+  always @(posedge clk)//clk 
     begin 
-	  Result <= R_mull;
+	  Result <= R_mull;  //combinacional 
 	end 
 
 	  
-  always @(*)
+  always @(posedge clk)
     begin
 	   
 	   R1_mull <= a;
@@ -914,11 +916,12 @@ module alu(a,b,ALUControl,Result,ALUFlags);
 	    3'b011: Result = a | b; 
 	    3'b111: Result = R_mull[31:0];
 	   endcase
+
     end
   
-  always @(*)
+  always @(posedge clk)
     begin 
-	    case (ALUControl[2:0])
+	    case (ALUControl)
 	    3'b000: begin 
 		  R_mull = R1_mull * R2_mull; //modificado - MUL
 		  neg = R_mull[31];
