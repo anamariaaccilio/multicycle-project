@@ -983,6 +983,8 @@ module alu(a,b,ALUControl,Result,ALUFlags);
 	assign overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
 	assign ALUFlags = {neg, zero, carry, overflow};
 	*/
+
+	//NOTA: EL TIPO DE LÓGICA ES SECUENCIAL POR QUE LUEGO SE ESCRIBE 
 	
 endmodule
 
