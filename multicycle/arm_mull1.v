@@ -1,4 +1,3 @@
-
 module alu(a,b,ALUControl,Result,ALUFlags, clk);
   input clk; 
   input [31:0] a,b;
@@ -48,17 +47,18 @@ module alu(a,b,ALUControl,Result,ALUFlags, clk);
 	   //verificar el assign
 
 
-       /*
+       
 
 	   neg = Result[31]; 
 	   zero = (Result == 32'b0);
 	   carry = (ALUControl[1] == 1'b0) & sum[32]; 
 	   overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
-       */
+       
 	   
     end
   
   always @(posedge clk)
+
     begin 
 	    case (ALUControl)
             3'b000: 
@@ -101,13 +101,16 @@ module alu(a,b,ALUControl,Result,ALUFlags, clk);
         Result <= Result_reg; 
 	end 
 
+
+    /*
+
 	
-   assign neg = Result[31]; 
-   assign zero = (Result == 32'b0);
-   assign carry = (ALUControl[1] == 1'b0) & sum[32];
-   assign overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
-   assign ALUFlags = {neg, zero, carry, overflow};
-	
+  assign neg = Result[31]; 
+  assign zero = (Result == 32'b0);
+  assign carry = (ALUControl[1] == 1'b0) & sum[32];
+  assign overflow = (ALUControl[1] == 1'b0) & ~(a[31] ^ b[31] ^ ALUControl[0]) & (a[31] ^ sum[31]);
+  assign ALUFlags = {neg, zero, carry, overflow};
+   */
 
 	//NOTA: EL TIPO DE LÓGICA ES SECUENCIAL PORQUE LUEGO SE ESCRIBE 
 	
